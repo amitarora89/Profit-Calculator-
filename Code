@@ -1,0 +1,112 @@
+from kivy.app import App
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.core.window import Window
+
+Window.clearcolor = (1, 1, 0, 1)  # 🔸 Yellow background
+
+class ProfitApp(App):
+    def build(self):
+        layout = FloatLayout()
+
+        # 🔶 Cost Price Label
+        self.cp_label = Label(
+            text="Enter Cost Price",
+            font_size=95,
+            color=(0.5, 0, 0, 1),  # Maroon
+            size_hint=(.8, .1),
+            pos_hint={"x": .1, "y": .85}
+        )
+        layout.add_widget(self.cp_label)
+
+        # 🔶 Cost Price Input
+        self.cp_input = TextInput(
+            multiline=False,
+            font_size=95,
+            halign="center",
+            size_hint=(.8, .1),
+            pos_hint={"x": .1, "y": .75}
+        )
+        layout.add_widget(self.cp_input)
+        self.cp_input.bind(text=self.update_profit)
+
+        # 🔶 Selling Price Label
+        self.sp_label = Label(
+            text="Enter Selling Price",
+            font_size=95,
+            color=(0.5, 0, 0, 1),
+            size_hint=(.8, .1),
+            pos_hint={"x": .1, "y": .6}
+        )
+        layout.add_widget(self.sp_label)
+
+        # 🔶 Selling Price Input
+        self.sp_input = TextInput(
+            multiline=False,
+            font_size=95,
+            halign="center",
+            size_hint=(.8, .1),
+            pos_hint={"x": .1, "y": .5}
+        )
+        layout.add_widget(self.sp_input)
+        self.sp_input.bind(text=self.update_profit)
+
+        # 🔷 Profit Label
+        self.profit_label = Label(
+            text="Profit: ₹0.00",
+            font_size=95,
+            color=(0.5, 0, 0, 1),
+            size_hint=(.8, .1),
+            pos_hint={"x": .1, "y": .35}
+        )
+        layout.add_widget(self.profit_label)
+
+        # 🔷 Profit Percent Label
+        self.percent_label = Label(
+            text="Profit %: 0.00%",
+            font_size=95,
+            color=(0.5, 0, 0, 1),
+            size_hint=(.8, .1),
+            pos_hint={"x": .1, "y": .22}
+        )
+        layout.add_widget(self.percent_label)
+
+        # 🔸 Clear Button
+        self.clear_button = Button(
+            text="Clear",
+            font_size=95,
+            background_normal='',
+            background_color=(0.5, 0, 0, 1),  # Maroon
+            color=(1, 1, 1, 1),  # White text
+            size_hint=(.6, .12),
+            pos_hint={"center_x": .5, "y": .01}
+        )
+        self.clear_button.bind(on_press=self.clear_all)
+        layout.add_widget(self.clear_button)
+
+        return layout
+
+    # 🔷 Profit Calculation
+    def update_profit(self, instance, value):
+        try:
+            cp = float(self.cp_input.text)
+            sp = float(self.sp_input.text)
+            profit = sp - cp
+            profit_percent = (profit / cp) * 100 if cp != 0 else 0
+
+            self.profit_label.text = f"Profit: ₹{profit:.2f}"
+            self.percent_label.text = f"Profit %: {profit_percent:.2f}%"
+        except:
+            self.profit_label.text = "Profit: ₹0.00"
+            self.percent_label.text = "Profit %: 0.00%"
+
+    # 🔷 Clear All Fields
+    def clear_all(self, instance):
+        self.cp_input.text = ""
+        self.sp_input.text = ""
+        self.profit_label.text = "Profit: ₹0.00"
+        self.percent_label.text = "Profit %: 0.00%"
+
+ProfitApp().run()
